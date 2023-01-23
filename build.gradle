@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.7.6'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'com.gdsc'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation "com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.1" // log의 sql ? ? 에 어떤 값이 들어가는지 로그로 찍어준다.
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5' // 하이버네이트 proxy 문제 해결
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+//    runtimeOnly 'mysql:mysql-connector-java'
+    annotationProcessor 'org.projectlombok:lombok'
+    implementation 'mysql:mysql-connector-java'
+    implementation 'org.projectlombok:lombok:'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // jwt
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// gradle build 시 test 때문에 fail나는거 막기
+test.onlyIf{
+    !project.hasProperty('test')
+}
+
+// gradle build시 xx-plain.jar 나오는거 막기(gradle 2.5부터 생김)
+jar{
+    enabled = false
+}
